@@ -114,3 +114,36 @@ def init_d(G):
                 d[i][j] = G.w(i, j)
         d[i][i] = 0
     return d
+
+#Dijkstra's algorithm with a limit of k relaxations per node
+def dijkstra_approx(G, source, k):
+    dist = {}
+    relax_count = {}
+    Q = min_heap.MinHeap([])
+    
+    #initialize distance to infinity for all nodes except source, which is set to 0
+    #also initialize relax_count to 0 for all nodes
+    #and initialize the priority queue with all nodes and their distances
+    for node in G.adj:
+        dist[node] = float("inf")
+        relax_count[node] = 0
+        Q.insert(min_heap.Element(node, dist[node]))
+    dist[source] = 0
+
+    #extract the node with the minimum distance
+    while not Q.is_empty():
+        elem = Q.extract_min()
+        u = elem.value
+
+        #skip this node if it has already been relaxed k times
+        if relax_count[u] >= k:
+            continue
+        relax_count[u] += 1
+
+        #relax edges from u to its neighbors
+        for v in G.adj[u]:
+            weight = G.w(u, v)
+            if dist[u] + weight < dist[v]:
+                dist[v] = dist[u] + weight
+                Q.decrease_key(v, dist[v])
+    return dist
