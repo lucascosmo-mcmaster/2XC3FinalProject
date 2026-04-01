@@ -147,3 +147,31 @@ def dijkstra_approx(G, source, k):
                 dist[v] = dist[u] + weight
                 Q.decrease_key(v, dist[v])
     return dist
+
+#Bellman-Ford algorithm with a limit of k relaxations per node
+def bellman_ford_approx(G, source, k):
+    dist = {}
+    relax_count = {}
+    
+    #initialize distance to infinity for all nodes except source, which is set to 0
+    #also initialize relax_count to 0 for all nodes
+    for node in G.adj:
+        dist[node] = float("inf")
+        relax_count[node] = 0
+    dist[source] = 0
+
+    #repeat until no updates happen or all nodes have been relaxed k times
+    updated = True
+    while updated:
+        updated = False
+        for u in G.adj:
+            #skip this node if it has already been relaxed k times
+            if relax_count[u] >= k:
+                continue
+            for v in G.adj[u]:
+                weight = G.w(u, v)
+                if dist[u] + weight < dist[v]:
+                    dist[v] = dist[u] + weight
+                    updated = True
+            relax_count[u] += 1
+    return dist
