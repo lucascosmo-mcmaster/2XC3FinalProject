@@ -189,3 +189,18 @@ def create_random_sparse_graph(n, p, upper):
                 G.add_edge(i, j, random.randint(1, upper))
     
     return G
+
+#creates a random sparse graph with n nodes, probability p of an edge existing, and edge weights between -5 and 10 (allowing negative weights)
+def create_random_negative_graph(n, p):
+    G = DirectedWeightedGraph()
+    
+    for i in range(n):
+        G.add_node(i)
+    
+    for i in range(n):
+        for j in range(n):
+            if i != j and random.random() < p:
+                weight = random.randint(-5, 10)
+                G.add_edge(i, j, weight)
+    
+    return G
