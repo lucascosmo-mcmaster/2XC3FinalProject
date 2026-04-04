@@ -175,3 +175,17 @@ def bellman_ford_approx(G, source, k):
                     updated = True
             relax_count[u] += 1
     return dist
+
+#creates a random sparse graph with n nodes, probability p of an edge existing, and edge weights between 1 and upper
+def create_random_sparse_graph(n, p, upper):
+    G = DirectedWeightedGraph()
+    
+    for i in range(n):
+        G.add_node(i)
+    
+    for i in range(n):
+        for j in range(n):
+            if i != j and random.random() < p:
+                G.add_edge(i, j, random.randint(1, upper))
+    
+    return G
