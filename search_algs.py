@@ -11,7 +11,7 @@ def getPath(n, pred):
     return path
 
 def a_star(G: DirectedWeightedGraph, s, d, h):
-    pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
+    pred = {} #Predecessor dictionary
     dist = {} #Distance dictionary
     Q = MinHeap([])
     nodes = list(G.adj.keys())
@@ -27,7 +27,7 @@ def a_star(G: DirectedWeightedGraph, s, d, h):
     while not Q.is_empty(): 
         current_element = Q.extract_min() #grab next
         current_node = current_element.value
-        if current_node == d:
+        if current_node == d: #found d
             return (pred, getPath(d, pred))
         for neighbour in G.adj[current_node]:
             if dist[current_node] + G.w(current_node, neighbour) < dist[neighbour]: #found a shorter path to neighbour
@@ -36,7 +36,30 @@ def a_star(G: DirectedWeightedGraph, s, d, h):
                 pred[neighbour] = current_node
     
     
+def dijkstra(G, s, d): #for our comparisons we need a djikstra that only searches for one node 'd' 
+    pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
+    dist = {} #Distance dictionary
+    Q = MinHeap([])
+    nodes = list(G.adj.keys())
 
+    #Initialize priority queue/heap and distances
+    for node in nodes:
+        Q.insert(Element(node, float("inf")))
+        dist[node] = float("inf")
+    Q.decrease_key(s, 0)
+
+    #Meat of the algorithm
+    while not Q.is_empty():
+        current_element = Q.extract_min()
+        current_node = current_element.value
+        dist[current_node] = current_element.key
+        if (current_node == d):
+            return (pred, getPath(d, pred))
+        for neighbour in G.adj[current_node]:
+            if dist[current_node] + G.w(current_node, neighbour) < dist[neighbour]:
+                Q.decrease_key(neighbour, dist[current_node] + G.w(current_node, neighbour))
+                dist[neighbour] = dist[current_node] + G.w(current_node, neighbour)
+                pred[neighbour] = current_node
 
 
 
