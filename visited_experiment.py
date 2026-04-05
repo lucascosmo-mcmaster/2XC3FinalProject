@@ -1,5 +1,5 @@
 from london_graph import stations, connections, heuristic, G
-from search_algs import a_star, dijkstra
+from search_algs import a_star_visits, dijkstra_visits
 import time
 import matplotlib.pyplot as plt
 
@@ -31,12 +31,12 @@ path_length = []
 count = 0
 for s, d in all_trips:
     start = time.perf_counter()
-    a_star_results = a_star(G, s, d, heuristic)
+    a_star_results = a_star_visits(G, s, d, heuristic)
     end = time.perf_counter()
     a_time = (end - start)
     
     start = time.perf_counter()
-    dijkstra_results = dijkstra(G, s, d)
+    dijkstra_results = dijkstra_visits(G, s, d)
     end = time.perf_counter()
     d_time = end - start
     diff = a_time - d_time
