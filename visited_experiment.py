@@ -24,6 +24,7 @@ def numTransfers(path):
         current = next
     return count
 
+
 a_num_seen = []
 d_num_seen = []
 path_length = []

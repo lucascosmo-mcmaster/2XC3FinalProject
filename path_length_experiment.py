@@ -11,6 +11,7 @@ for s in stations.keys():
             all_trips.append((s, d))
 
 
+large_paths = []
 time_diffs = []
 path_lengths = []
 for s, d in all_trips:
@@ -23,7 +24,7 @@ for s, d in all_trips:
     dijkstra_results = dijkstra(G, s, d)
     end = time.perf_counter()
     d_time = end - start
-    diff = a_time - d_time
+    diff = 1000*(a_time - d_time)
 
     time_diffs.append(diff)
     if (len(a_star_results[1]) != len(dijkstra_results[1])):
@@ -31,10 +32,29 @@ for s, d in all_trips:
         break
     else:
         path_lengths.append(len(a_star_results[1]))
+    if len(a_star_results[1]) > 20:
+        large_paths.append((s,d))
+    
+time_diffs = []
+path_lengths = []
+for s, d in large_paths:
+    start = time.perf_counter()
+    a_star_results = a_star(G, s, d, heuristic)
+    end = time.perf_counter()
+    a_time = (end - start)
+    
+    start = time.perf_counter()
+    dijkstra_results = dijkstra(G, s, d)
+    end = time.perf_counter()
+    d_time = end - start
+    diff = 1000*(a_time - d_time)
+
+    time_diffs.append(diff)
+    path_lengths.append(len(a_star_results[1]))
 
 plt.scatter(path_lengths, time_diffs)
 plt.xlabel('Path length (nodes)', fontsize=12, fontweight='bold')
-plt.ylabel('Runtime difference (Seconds)', fontsize=12, fontweight='bold')
+plt.ylabel('Runtime difference (miliseconds)', fontsize=12, fontweight='bold')
 plt.title('Performance Comparison: Dijkstra vs A*', pad=15)
-plt.savefig('Dijkstra_vs_A_star_pathlength.png', dpi=300)
+plt.savefig('Dijkstra_vs_A_star_largepaths.png', dpi=300)
 plt.show()
